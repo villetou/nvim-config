@@ -31,6 +31,8 @@ nmap <leader>ss /
 nmap <leader>sp :Rg
 
 nmap <leader>op :NERDTreeToggle<cr>
+nmap <leader>of :!open %:p:h<cr>
+nmap <leader>ot :let $VIM_DIR=expand('%:p:h')<cr>:term<cr>icd $VIM_DIR<cr>
 
 nmap <leader>cd :call CocActionAsync('jumpDefinition')<cr>
 nmap <leader>cD <Plug>(coc-references)
