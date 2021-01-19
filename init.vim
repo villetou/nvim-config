@@ -25,7 +25,7 @@ nmap <leader>fw :w!<cr>
 
 nmap <leader>pf :FZF<cr>
 nmap <leader>w <C-w>
-
+nmap <C-w>w :W<cr>
 nmap <leader>sf :BLines
 nmap <leader>ss /
 nmap <leader>sp :Rg
@@ -34,6 +34,8 @@ nmap <leader>op :NERDTreeToggle<cr>
 
 nmap <leader>cd :call CocActionAsync('jumpDefinition')<cr>
 nmap <leader>cD <Plug>(coc-references)
+
+nmap <leader>gg :Gstatus<cr>
 
 let g:onedark_terminal_italics = 1
 let g:lightline = {
