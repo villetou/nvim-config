@@ -13,6 +13,7 @@ Plug 'tpope/vim-surround'
 Plug 'joshdick/onedark.vim'
 Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'tpope/vim-fugitive'
 
 " Initialize plugin system
 call plug#end()
@@ -31,10 +32,21 @@ nmap <leader>sp :Rg
 
 nmap <leader>op :NERDTreeToggle<cr>
 
+nmap <leader>cd :call CocActionAsync('jumpDefinition')<cr>
+nmap <leader>cD <Plug>(coc-references)
+
 let g:onedark_terminal_italics = 1
 let g:lightline = {
-  \ 'colorscheme': 'onedark',
-  \ }
+	\ 'colorscheme': 'onedark',
+	\ 'active': {
+	\   'left': [ [ 'mode', 'paste' ],
+	\             [ 'fugitive', 'readonly', 'filename', 'modified' ] ]
+	\ },
+	\ 'component_function': {
+	\   'cocstatus': 'coc#status',
+	\   'fugitive': 'fugitive#statusline'
+	\ },
+\ }
 
 :set ignorecase
 :set smartcase
@@ -42,4 +54,5 @@ let g:lightline = {
 :set mouse=a
 
 syntax on
+
 colorscheme onedark
