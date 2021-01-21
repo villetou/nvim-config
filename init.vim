@@ -52,10 +52,25 @@ let g:lightline = {
 	\ },
 \ }
 
-:set ignorecase
-:set smartcase
+let g:ascii = [
+\ '  , _            _                     ',
+\ ' /|/ \          (_|   |_/o             ',
+\ '  |   |   _   __  |   |      _  _  _   ',
+\ '  |   |  |/  /  \_|   |  |  / |/ |/ |  ',
+\ '  |   |_/|__/\__/  \_/   |_/  |  |  |_/',
+\ ''
+\]
 
-:set mouse=a
+"let g:startify_custom_header = g:ascii + startify#fortune#quote()
+let g:startify_custom_header = g:ascii
+
+set nowrap
+set number
+
+set ignorecase
+set smartcase
+
+set mouse=a
 
 syntax on
 
