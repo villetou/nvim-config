@@ -16,19 +16,21 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'tpope/vim-fugitive'
 Plug 'mhinz/vim-startify'
 Plug 'airblade/vim-rooter'
+Plug 'liuchengxu/vim-which-key'
+Plug 'sheerun/vim-polyglot'
 call plug#end()
-
-:set number
 
 map <SPACE> <leader>
 nmap <leader>fw :w!<cr>
 
 nmap <leader>pf :FZF<cr>
+nmap <leader>pp :FZF<cr>
+
 nmap <leader>w <C-w>
 nmap <C-w>w :W<cr>
-nmap <leader>sf :BLines
+nmap <leader>sf :BLines<cr>
 nmap <leader>ss /
-nmap <leader>sp :Rg
+nmap <leader>sp :Rg<cr>
 
 nmap <leader>op :NERDTreeToggle<cr>
 nmap <leader>of :!open %:p:h<cr>
@@ -39,7 +41,14 @@ nmap <leader>cD <Plug>(coc-references)
 
 nmap <leader>gg :Gstatus<cr>
 
-let g:onedark_terminal_italics = 1
+nmap <silent><leader>bb :Buffers<cr>
+nmap <silent><leader>bk :bd<cr>
+nmap <silent><leader>bc :bd<cr>
+
+nnoremap <silent><TAB> :bnext<cr>
+
+"nnoremap <silent><leader> :WhichKey '<Space>'<CR>
+
 let g:lightline = {
 	\ 'colorscheme': 'onedark',
 	\ 'active': {
@@ -63,6 +72,24 @@ let g:ascii = [
 
 "let g:startify_custom_header = g:ascii + startify#fortune#quote()
 let g:startify_custom_header = g:ascii
+let g:startify_change_to_vcs_root = 1
+
+function! s:switchDirAndShowFiles(path)
+	lcd path
+	execute FZF path
+endfunction
+
+function! s:zFrecentFolders()
+    let files = systemlist("z | tail -n 10 | awk '{print $2}' 2>/dev/null")
+    return map(files, "{'line': v:val, 'path': v:val}") 
+endfunction
+" , 'cmd': 'function(s:switchDirAndShowFiles('.v:val.'))'}")
+
+let g:startify_lists = [
+        \ { 'type': 'dir',       'header': ['   Files in '. getcwd()] },
+        \ { 'type': function('s:zFrecentFolders'),  'header': ['   Recent directories']},
+        \ { 'type': 'files',     'header': ['   Other files']            }
+\ ]
 
 set nowrap
 set number
@@ -72,6 +99,20 @@ set smartcase
 
 set mouse=a
 
-syntax on
 
+set termguicolors
+
+if (has("autocmd") && !has("gui_running"))
+  augroup colors
+    autocmd!
+    let s:foreground = { "gui": "#bdbacc", "cterm": "235", "cterm16": "0" }
+    let s:background = { "gui": "#1e2129", "cterm": "235", "cterm16": "0" }
+    autocmd ColorScheme * call onedark#extend_highlight("Normal", { "bg": s:background, "fg": s:foreground })
+    "autocmd ColorScheme * call onedark#extend_highlight("Normal", { "bg": s:background }) "No `fg` setting
+  augroup END
+endif
+
+let g:onedark_terminal_italics = 1
 colorscheme onedark
+
+syntax on
