@@ -18,6 +18,7 @@ Plug 'mhinz/vim-startify'
 Plug 'airblade/vim-rooter'
 Plug 'liuchengxu/vim-which-key'
 Plug 'sheerun/vim-polyglot'
+Plug 'Yggdroot/indentLine'
 call plug#end()
 
 map <SPACE> <leader>
@@ -80,15 +81,15 @@ function! s:switchDirAndShowFiles(path)
 endfunction
 
 function! s:zFrecentFolders()
-    let files = systemlist("z | tail -n 10 | awk '{print $2}' 2>/dev/null")
-    return map(files, "{'line': v:val, 'path': v:val}") 
+  let files = systemlist("z | tail -n 10 | awk '{print $2}' 2>/dev/null")
+  return map(files, "{'line': v:val, 'path': v:val}") 
 endfunction
 " , 'cmd': 'function(s:switchDirAndShowFiles('.v:val.'))'}")
 
 let g:startify_lists = [
-        \ { 'type': 'dir',       'header': ['   Files in '. getcwd()] },
-        \ { 'type': function('s:zFrecentFolders'),  'header': ['   Recent directories']},
-        \ { 'type': 'files',     'header': ['   Other files']            }
+  \ { 'type': 'dir',       'header': ['   Files in '. getcwd()] },
+  \ { 'type': function('s:zFrecentFolders'),  'header': ['   Recent directories']},
+  \ { 'type': 'files',     'header': ['   Other files']            }
 \ ]
 
 set nowrap
@@ -99,6 +100,13 @@ set smartcase
 
 set mouse=a
 
+" IndentLine {{
+let g:indentLine_char = '▏'
+let g:indentLine_first_char = '▏'
+let g:indentLine_showFirstIndentLevel = 0
+let g:indentLine_setColors = 1
+let g:indentLine_color_gui = '#2f2f36'
+" }}
 
 set termguicolors
 
