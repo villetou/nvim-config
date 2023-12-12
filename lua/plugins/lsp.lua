@@ -3,9 +3,11 @@ return {
 	{
 		'VonHeikemen/lsp-zero.nvim',
 		branch = 'v3.x',
-		lazy = true,
+		lazy = false,
 		config = function()
-			require('lsp-zero').setup_servers({ 'rust_analyzer' })
+			local lsp_zero = require('lsp-zero')
+			lsp_zero.extend_lspconfig()
+			--lsp_zero.setup_servers({ 'rust_analyzer' })
 		end,
 	},
 	{ 'neovim/nvim-lspconfig', depends = { 'VonHeikemen/lsp-zero.nvim' } },
@@ -13,7 +15,6 @@ return {
 		'williamboman/mason-lspconfig.nvim',
 		depends = { 'neovim/nvim-lspconfig', 'williamboman/mason.nvim', 'VonHeikemen/lsp-zero.nvim' },
 		config = function()
-			local util = require('lspconfig/util')
 			require("mason-lspconfig").setup {
 				ensure_installed = { "lua_ls", "rust_analyzer" },
 			}
@@ -51,16 +52,15 @@ return {
 				end
 
 			}
-			require("lspconfig").rust_analyzer.setup {
-				filetypes = { "rust" },
-				root_dir = util.root_pattern("Cargo.toml"),
-				setting = {
-					['rust-analyzer'] = {
-						cargo = { allFeatures = true }
-					}
-				}
-
-			}
+			--			require("lspconfig").rust_analyzer.setup {
+			--				filetypes = { "rust" },
+			--				root_dir = util.root_pattern("Cargo.toml"),
+			--				setting = {
+			--					['rust-analyzer'] = {
+			--						cargo = { allFeatures = true }
+			--					}
+			--				}
+			--			}
 
 			vim.keymap.set("n", "<Leader>ff", "<CMD>lua vim.lsp.buf.format()<CR>")
 		end
@@ -69,7 +69,7 @@ return {
 	{
 		'hrsh7th/nvim-cmp',
 		dependencies = {
-			{ 'L3MON4D3/LuaSnip', 'VonHeikemen/lsp-zero.nvim' }
+			{ 'L3MON4D3/LuaSnip', 'VonHeikemen/lsp-zero.nvim', 'hrsh7th/cmp-nvim-lsp' }
 		},
 		config = function()
 			local cmp = require('cmp')
@@ -91,6 +91,16 @@ return {
 					['<C-u>'] = cmp.mapping.scroll_docs(-4),
 					['<C-d>'] = cmp.mapping.scroll_docs(4),
 				})
+			})
+
+			-- Set up lspconfig.
+			local capabilities = require('cmp_nvim_lsp').default_capabilities()
+			require('lspconfig').rust_analyzer.setup({
+				capabilities = capabilities
+			})
+			require('lspconfig').lua_ls.setup({
+				capabilities = capabilities,
+				filetypes = {'rust'}
 			})
 		end
 	},
