@@ -23,7 +23,6 @@ return {
 				ensure_installed = { "lua_ls", "rust_analyzer" },
 				handlers = {
 					require('lsp-zero').default_setup,
-
 				},
 			})
 		end
@@ -54,16 +53,6 @@ return {
 					['<C-u>'] = cmp.mapping.scroll_docs(-4),
 					['<C-d>'] = cmp.mapping.scroll_docs(4),
 				})
-			})
-
-			-- Set up lspconfig.
-			local capabilities = require('cmp_nvim_lsp').default_capabilities()
-			require('lspconfig').rust_analyzer.setup({
-				capabilities = capabilities
-			})
-			require('lspconfig').lua_ls.setup({
-				capabilities = capabilities,
-				filetypes = { 'rust' }
 			})
 		end
 	},
