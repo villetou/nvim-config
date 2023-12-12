@@ -7,62 +7,25 @@ return {
 		config = function()
 			local lsp_zero = require('lsp-zero')
 			lsp_zero.extend_lspconfig()
-			--lsp_zero.setup_servers({ 'rust_analyzer' })
+			lsp_zero.on_attach(function(client, bufnr)
+				-- see :help lsp-zero-keybindings
+				lsp_zero.default_keymaps({ buffer = bufnr })
+			end)
 		end,
 	},
-	{ 'neovim/nvim-lspconfig', depends = { 'VonHeikemen/lsp-zero.nvim' } },
+	{ 'williamboman/mason.nvim', config = true },
+	{ 'neovim/nvim-lspconfig',   depends = { 'VonHeikemen/lsp-zero.nvim' } },
 	{
 		'williamboman/mason-lspconfig.nvim',
-		depends = { 'neovim/nvim-lspconfig', 'williamboman/mason.nvim', 'VonHeikemen/lsp-zero.nvim' },
+		depends = { 'neovim/nvim-lspconfig', 'williamboman/mason.nvim', 'VonHeikemen/lsp-zero.nvim', 'williamboman/mason-lspconfig.nvim' },
 		config = function()
-			require("mason-lspconfig").setup {
+			require('mason-lspconfig').setup({
 				ensure_installed = { "lua_ls", "rust_analyzer" },
-			}
+				handlers = {
+					require('lsp-zero').default_setup,
 
-			require("lspconfig").lua_ls.setup {
-				on_init = function(client)
-					local path = client.workspace_folders[1].name
-					if not vim.loop.fs_stat(path .. '/.luarc.json') and not vim.loop.fs_stat(path .. '/.luarc.jsonc') then
-						client.config.settings = vim.tbl_deep_extend('force',
-							client.config.settings, {
-								Lua = {
-									runtime = {
-										-- Tell the language server which version of Lua you're using
-										-- (most likely LuaJIT in the case of Neovim)
-										version = 'LuaJIT'
-									},
-									-- Make the server aware of Neovim runtime files
-									workspace = {
-										checkThirdParty = false,
-										library = {
-											vim.env.VIMRUNTIME
-											-- "${3rd}/luv/library"
-											-- "${3rd}/busted/library",
-										}
-										-- or pull in all of 'runtimepath'. NOTE: this is a lot slower
-										-- library = vim.api.nvim_get_runtime_file("", true)
-									}
-								}
-							})
-
-						client.notify("workspace/didChangeConfiguration",
-							{ settings = client.config.settings })
-					end
-					return true
-				end
-
-			}
-			--			require("lspconfig").rust_analyzer.setup {
-			--				filetypes = { "rust" },
-			--				root_dir = util.root_pattern("Cargo.toml"),
-			--				setting = {
-			--					['rust-analyzer'] = {
-			--						cargo = { allFeatures = true }
-			--					}
-			--				}
-			--			}
-
-			vim.keymap.set("n", "<Leader>ff", "<CMD>lua vim.lsp.buf.format()<CR>")
+				},
+			})
 		end
 	},
 	-- Autocompletion
@@ -100,7 +63,7 @@ return {
 			})
 			require('lspconfig').lua_ls.setup({
 				capabilities = capabilities,
-				filetypes = {'rust'}
+				filetypes = { 'rust' }
 			})
 		end
 	},
