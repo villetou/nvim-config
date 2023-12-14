@@ -20,9 +20,12 @@ return {
 		depends = { 'neovim/nvim-lspconfig', 'williamboman/mason.nvim', 'VonHeikemen/lsp-zero.nvim', 'williamboman/mason-lspconfig.nvim' },
 		config = function()
 			require('mason-lspconfig').setup({
-				ensure_installed = { "lua_ls", "rust_analyzer" },
+				ensure_installed = { "lua_ls", "rust_analyzer", "tsserver", "prismals" },
 				handlers = {
 					require('lsp-zero').default_setup,
+					prismals = function()
+						require('lspconfig').prismals.setup({})
+					end,
 				},
 			})
 		end
