@@ -1,3 +1,2 @@
-require('remap')
-require('bootstrap-lazy')
-require('villetou')
+-- bootstrap lazy.nvim, LazyVim and your plugins
+require("config.lazy")
